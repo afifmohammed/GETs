@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api.cs" />
-    <Compile Include="Configuration.cs" />
+    <Compile Include="Registration.cs" />
     <Compile Include="PrimitiveWrapper.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FunctionBuilders.cs" />

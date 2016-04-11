@@ -33,14 +33,33 @@ namespace Tests
             public int Length { get; set; }
         }
 
-        static IEnumerable<string> Words(GivenLength query, Connection<string> connection)
+        class Total
+        {
+            public Total(int value)
+            {
+                Value = value;
+            }
+            public readonly int Value;
+        }
+
+        class TotalWordsForGivenLength : Request<Total>
+        {
+            public int Length { get; set; }
+        }
+
+        static IEnumerable<string> ByLength(GivenLength query, Connection<string> connection)
         {
             return connection.List.Where(x => x.Length == query.Length);
         }
 
-        static IEnumerable<string> Words(StartingWith query, Connection<string> connection)
+        static IEnumerable<string> ByPrefix(StartingWith query, Connection<string> connection)
         {
             return connection.List.Where(x => x.StartsWith(query.Prefix));
+        }
+
+        static Total TotalByLength(TotalWordsForGivenLength query, Connection<string> connection)
+        {
+            return new Total(ByLength(new GivenLength { Length = query.Length }, connection).Count());
         }
 
         [Fact]
@@ -49,12 +68,13 @@ namespace Tests
             var list = new[] { "gone", "gost", "goose", "guava" }.ToList();
             var anotherList = new[] { "great", "gofer" }.ToList();
 
-            new QueryConfiguration<Connection<string>>(() => new Connection<string>(list))
-                .Register<StartingWith, string>(Words)
-                .Register<GivenLength, string>(Words);
+            new QueryRegistration<Connection<string>>(() => new Connection<string>(list))
+                .Register<StartingWith, string>(ByPrefix)
+                .Register<GivenLength, string>(ByLength);
 
-            new QueryConfiguration<Connection<string>>(() => new Connection<string>(anotherList))
-                .Register<StartingWith, string>(Words);
+            new QueryRegistration<Connection<string>>(() => new Connection<string>(anotherList))
+                .Register<StartingWith, string>(ByPrefix)
+                .Register<TotalWordsForGivenLength, Total>(TotalByLength, Return.List);
 
             Assert.Equal(
                 new[] { "gone", "gost", "goose", "gofer" }
@@ -71,6 +91,12 @@ namespace Tests
                 Query<string>.By(new GivenLength { Length = 5 })
                     .OrderBy(x => x)
                     .ToList());
+
+            Assert.Equal(
+                2, 
+                Query<Total>.By(new TotalWordsForGivenLength { Length = 5 })
+                    .Single()
+                    .Value);
         }
     }
 }

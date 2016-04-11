@@ -3,16 +3,25 @@ using System.Collections.Generic;
 
 namespace Queries
 {
-    public class QueryConfiguration<TConnection> where TConnection : IDisposable
+    public class QueryRegistration<TConnection> where TConnection : IDisposable
     {
         Func<TConnection> ConnectionFactory;
 
-        public QueryConfiguration(Func<TConnection> connectionFactory)
+        public QueryRegistration(Func<TConnection> connectionFactory)
         {
             ConnectionFactory = connectionFactory;
         }
 
-        public QueryConfiguration<TConnection> Register<TInput, TOutput>(
+        public QueryRegistration<TConnection> Register<TInput, TOutput>(
+            Func<TInput, TConnection, TOutput> function,
+            Func<Func<TInput, TConnection, TOutput>, Func<TInput, TConnection, IEnumerable<TOutput>>> list)
+            where TOutput : class
+        {
+            QueryRoutes.Routes.Add(Function.ToKvp(list(function), ProvideConnection));
+            return this;
+        }
+
+        public QueryRegistration<TConnection> Register<TInput, TOutput>(
             Func<TInput, TConnection, IEnumerable<TOutput>> function)
             where TOutput : class
         {

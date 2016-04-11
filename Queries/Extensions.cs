@@ -1,8 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Queries
 {
+    public static class Return
+    {
+        public static Func<TIn, TDependency, IEnumerable<TOut>> List<TIn, TDependency, TOut>(Func<TIn, TDependency, TOut> function)
+        {
+            return (i, d) => new[] { function(i, d) };
+        }
+    }
+
     static class Extensions
     {
         public static string FriendlyName(this Type type)
