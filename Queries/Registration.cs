@@ -43,7 +43,7 @@ namespace Queries
 
     static class QueryRoutes
     {
-        public static readonly List<KeyValuePair<FunctionContract, Func<object, IEnumerable<object>>>> Routes =
-            new List<KeyValuePair<FunctionContract, Func<object, IEnumerable<object>>>>();
+        public static readonly List<KeyValuePair<FunctionContract, object>> Routes =
+            new List<KeyValuePair<FunctionContract, object>>();
     }
 }
