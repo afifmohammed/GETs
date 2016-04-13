@@ -53,6 +53,14 @@ namespace Queries
             return Equals((FunctionContract)obj);
         }
 
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (Input.GetHashCode()*397) ^ Output.GetHashCode();
+            }
+        }
+
         bool Equals(FunctionContract other)
         {
             return other.Input.Equals(this.Input) && other.Output.Equals(this.Output);

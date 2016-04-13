@@ -5,11 +5,11 @@ namespace Queries
 {
     public class QueryRegistration<TConnection> where TConnection : IDisposable
     {
-        Func<TConnection> ConnectionFactory;
+        readonly Func<TConnection> _connectionFactory;
 
         public QueryRegistration(Func<TConnection> connectionFactory)
         {
-            ConnectionFactory = connectionFactory;
+            _connectionFactory = connectionFactory;
         }
 
         public QueryRegistration<TConnection> Register<TInput, TOutput>(
@@ -35,7 +35,7 @@ namespace Queries
         {
             return input =>
             {
-                using (var c = ConnectionFactory())
+                using (var c = _connectionFactory())
                     return query(input, c);
             };
         }
