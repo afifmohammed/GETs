@@ -63,7 +63,7 @@ namespace Queries
 
         bool Equals(FunctionContract other)
         {
-            return other.Input.Equals(this.Input) && other.Output.Equals(this.Output);
+            return other.Input.Equals(Input) && other.Output.Equals(Output);
         }
     }
 }

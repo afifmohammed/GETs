@@ -12,7 +12,7 @@ namespace Queries
         {
             return new KeyValuePair<FunctionContract, object>(
                 new FunctionContract(typeof(TInput).Contract(), typeof(TResult).Contract()),
-                Downcast(provideDependency(function)) as object);
+                Downcast(provideDependency(function)));
         }
 
         public static KeyValuePair<FunctionContract, object> ToKvp<TInput, TResult>(

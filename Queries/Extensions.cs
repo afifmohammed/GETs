@@ -22,8 +22,8 @@ namespace Queries
             }
             var genericArguments = type.GetGenericArguments();
             var typeDefeninition = type.Name;
-            var unmangledName = typeDefeninition.Substring(0, typeDefeninition.IndexOf("`"));
-            return unmangledName + "(of " + String.Join(",", genericArguments.Select(FriendlyName)) + ")";
+            var unmangledName = typeDefeninition.Substring(0, typeDefeninition.IndexOf("`", StringComparison.Ordinal));
+            return unmangledName + "(of " + string.Join(",", genericArguments.Select(FriendlyName)) + ")";
         }
 
         public static TypeContract Contract(this Type t)
